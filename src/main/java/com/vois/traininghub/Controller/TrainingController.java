@@ -25,7 +25,7 @@ public class TrainingController {
         try {
             training _training = trainingRepository
                     .save(new training(training.name, training.link, training.duration, training.topic, training.entity,
-                            0));
+                            training.AVG_Rating));
             return new ResponseEntity<>(_training, HttpStatus.CREATED);
         } catch (Exception e) {
             System.out.println(e.getMessage());
