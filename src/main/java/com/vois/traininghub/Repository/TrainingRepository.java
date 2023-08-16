@@ -11,6 +11,10 @@ public interface TrainingRepository extends JpaRepository<training, Long> {
 
     List<training> findByName(String name);
 
+    List<training> findByTopic(String topic);
+
+    List<training> findByEntity(String entity);
+
     // List<training> FindBylink(String link);
 
     // List<training> findbyduration(long duration);

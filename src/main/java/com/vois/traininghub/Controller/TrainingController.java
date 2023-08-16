@@ -94,4 +94,32 @@ public class TrainingController {
         }
     }
 
+    @GetMapping("/training/topic/{topic}")
+    public ResponseEntity<List<training>> getTrainingByTopic(@PathVariable("topic") String topic) {
+        try {
+            List<training> trainings = trainingRepository.findByTopic(topic);
+
+            if (trainings.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+            return new ResponseEntity<>(trainings, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/training/entity/{entity}")
+    public ResponseEntity<List<training>> getTrainingByEntity(@PathVariable("entity") String entity) {
+        try {
+            List<training> trainings = trainingRepository.findByEntity(entity);
+
+            if (trainings.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+            return new ResponseEntity<>(trainings, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 }
