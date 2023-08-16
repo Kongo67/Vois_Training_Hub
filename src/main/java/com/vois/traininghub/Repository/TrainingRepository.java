@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.vois.traininghub.Model.training;;
 
 public interface TrainingRepository extends JpaRepository<training, Long> {
-    // List<training> findById(long id);
+
 
     List<training> findByName(String name);
 
