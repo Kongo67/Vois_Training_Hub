@@ -27,7 +27,7 @@ public class TrainingController {
     @Autowired
     TrainingRepository trainingRepository;
 
-    @GetMapping("/trainings")
+    @GetMapping("/training")
     public ResponseEntity<List<training>> getAllTrainings() {
         try {
             List<training> trainings = new ArrayList<training>();
