@@ -10,8 +10,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -119,6 +121,36 @@ public class TrainingController {
             return new ResponseEntity<>(trainings, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PatchMapping("/training/{id}")
+    public ResponseEntity<training> updateTraining(@PathVariable("id") long id, @RequestBody training training) {
+        Optional<training> trainingData = trainingRepository.findById(id);
+
+        if (trainingData.isPresent()) {
+            training _training = trainingData.get();
+            if(training.name != null){
+                _training.name = training.name;
+            }
+            if(training.link != null){
+                _training.link = training.link;
+            }
+            if(training.duration != 0){
+                _training.duration = training.duration;
+            }
+            if(training.topic != null){
+                _training.topic = training.topic;
+            }
+            if(training.entity != null){
+                _training.entity = training.entity;
+            }
+            if(training.AVG_Rating != 0){
+                _training.AVG_Rating = training.AVG_Rating;
+            }
+            return new ResponseEntity<>(trainingRepository.save(_training), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
