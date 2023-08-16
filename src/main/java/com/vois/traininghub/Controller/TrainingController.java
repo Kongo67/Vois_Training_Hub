@@ -2,6 +2,7 @@ package com.vois.traininghub.Controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -58,14 +59,25 @@ public class TrainingController {
     }
 
     @DeleteMapping("/training/{id}")
-	public ResponseEntity<HttpStatus> deleteTraining(@PathVariable("id") long id) {
-		try {
-			trainingRepository.deleteById(id);
+    public ResponseEntity<HttpStatus> deleteTraining(@PathVariable("id") long id) {
+        try {
+            trainingRepository.deleteById(id);
             System.out.print("Training deleted");
-			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-		} catch (Exception e) {
-			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-	}
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/training/{id}")
+    public ResponseEntity<training> getTrainingById(@PathVariable("id") long id) {
+        Optional<training> trainingData = trainingRepository.findById(id);
+
+        if (trainingData.isPresent()) {
+            return new ResponseEntity<>(trainingData.get(), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
 
 }
