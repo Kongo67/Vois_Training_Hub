@@ -1,9 +1,13 @@
 package com.vois.traininghub.Controller;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,6 +23,23 @@ import com.vois.traininghub.Repository.TrainingRepository;
 public class TrainingController {
     @Autowired
     TrainingRepository trainingRepository;
+
+    @GetMapping("/trainings")
+    public ResponseEntity<List<training>> getAllTrainings() {
+        try {
+            List<training> trainings = new ArrayList<training>();
+
+            trainingRepository.findAll().forEach(trainings::add);
+
+            if (trainings.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+
+            return new ResponseEntity<>(trainings, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
     @PostMapping("/training")
     public ResponseEntity<training> createTraining(@RequestBody training training) {
