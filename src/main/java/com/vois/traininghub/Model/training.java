@@ -34,4 +34,25 @@ public class training{
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "FK_Training_ID", referencedColumnName = "Training_ID")
     private List<feedback> Train_ID;
+
+    public training() {
+    }
+
+    public training(String name, String link, long duration, String topic, String entity, long AVG_Rating) {
+        this.name = name;
+        this.link = link;
+        this.duration = duration;
+        this.topic = topic;
+        this.entity = entity;
+        this.AVG_Rating = AVG_Rating;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+        System.out.println("ID set to: " + this.id);
+    }
 }
