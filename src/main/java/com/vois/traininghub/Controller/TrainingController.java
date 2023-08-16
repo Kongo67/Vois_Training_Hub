@@ -27,7 +27,7 @@ public class TrainingController {
     @Autowired
     TrainingRepository trainingRepository;
 
-    @GetMapping("/trainings")
+    @GetMapping("/training")
     public ResponseEntity<List<training>> getAllTrainings() {
         try {
             List<training> trainings = new ArrayList<training>();
@@ -77,6 +77,20 @@ public class TrainingController {
             return new ResponseEntity<>(trainingData.get(), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/training/name/{name}")
+    public ResponseEntity<List<training>> getTrainingByName(@PathVariable("name") String name) {
+        try {
+            List<training> trainings = trainingRepository.findByName(name);
+
+            if (trainings.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+            return new ResponseEntity<>(trainings, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
