@@ -8,7 +8,7 @@ import com.vois.traininghub.Model.training;;
 
 public interface TrainingRepository extends JpaRepository<training, Long> {
 
-
+    
     List<training> findByName(String name);
 
     // List<training> FindBylink(String link);
