@@ -1,6 +1,5 @@
 package com.vois.traininghub.Controller;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.vois.traininghub.Model.training;
@@ -28,22 +28,30 @@ public class TrainingController {
     @Autowired
     TrainingRepository trainingRepository;
 
-    @GetMapping("/training")
-    public ResponseEntity<List<training>> getAllTrainings() {
-        try {
-            List<training> trainings = new ArrayList<training>();
-
-            trainingRepository.findAll().forEach(trainings::add);
-
-            if (trainings.isEmpty()) {
-                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        @GetMapping("/training")
+        public ResponseEntity<?> getTraining(@RequestParam(value = "id", required = false, defaultValue = "0") long id) {
+            if (id == 0) {
+                try {
+                    List<training> trainings = trainingRepository.findAll();
+                
+                    if (trainings.isEmpty()) {
+                        return new ResponseEntity<>("No trainings found.", HttpStatus.NOT_FOUND);
+                    }
+                
+                    return new ResponseEntity<>(trainings, HttpStatus.OK);
+                } catch (Exception e) {
+                    return new ResponseEntity<>("An error occurred.", HttpStatus.INTERNAL_SERVER_ERROR);
+                }
+            } else {
+                Optional<training> trainingData = trainingRepository.findById(id);
+            
+                if (trainingData.isPresent()) {
+                    return new ResponseEntity<>(trainingData.get(), HttpStatus.OK);
+                } else {
+                    return new ResponseEntity<>("Training not found.", HttpStatus.NOT_FOUND);
+                }
             }
-
-            return new ResponseEntity<>(trainings, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
-    }
 
     @PostMapping("/training")
     public ResponseEntity<training> createTraining(@RequestBody training training) {
@@ -69,20 +77,9 @@ public class TrainingController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
-    @GetMapping("/training/{id}")
-    public ResponseEntity<training> getTrainingById(@PathVariable("id") long id) {
-        Optional<training> trainingData = trainingRepository.findById(id);
-
-        if (trainingData.isPresent()) {
-            return new ResponseEntity<>(trainingData.get(), HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-    }
-
-    @GetMapping("/training/name/{name}")
-    public ResponseEntity<List<training>> getTrainingByName(@PathVariable("name") String name) {
+    
+    @GetMapping("/training/name")
+    public ResponseEntity<List<training>> getTrainingByName(@RequestParam("name") String name) {
         try {
             List<training> trainings = trainingRepository.findByName(name);
 
@@ -95,8 +92,8 @@ public class TrainingController {
         }
     }
 
-    @GetMapping("/training/topic/{topic}")
-    public ResponseEntity<List<training>> getTrainingByTopic(@PathVariable("topic") String topic) {
+    @GetMapping("/training/topic")
+    public ResponseEntity<List<training>> getTrainingByTopic(@RequestParam("topic") String topic) {
         try {
             List<training> trainings = trainingRepository.findByTopic(topic);
 
@@ -109,8 +106,8 @@ public class TrainingController {
         }
     }
 
-    @GetMapping("/training/entity/{entity}")
-    public ResponseEntity<List<training>> getTrainingByEntity(@PathVariable("entity") String entity) {
+    @GetMapping("/training/entity")
+    public ResponseEntity<List<training>> getTrainingByEntity(@RequestParam("entity") String entity) {
         try {
             List<training> trainings = trainingRepository.findByEntity(entity);
 
@@ -123,8 +120,8 @@ public class TrainingController {
         }
     }
 
-    @PatchMapping("/training/{id}")
-    public ResponseEntity<training> updateTraining(@PathVariable("id") long id, @RequestBody training training) {
+    @PatchMapping("/training")
+    public ResponseEntity<training> updateTraining(@RequestParam("id") long id, @RequestBody training training) {
         Optional<training> trainingData = trainingRepository.findById(id);
 
         if (trainingData.isPresent()) {
@@ -152,5 +149,5 @@ public class TrainingController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
-
+    
 }
