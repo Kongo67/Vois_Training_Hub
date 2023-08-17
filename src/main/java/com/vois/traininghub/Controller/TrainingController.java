@@ -40,7 +40,7 @@ public class TrainingController {
                 
                     return new ResponseEntity<>(trainings, HttpStatus.OK);
                 } catch (Exception e) {
-                    return new ResponseEntity<>("An error occurred.", HttpStatus.INTERNAL_SERVER_ERROR);
+                    return new ResponseEntity<>("An error occurred, please enter the ID again.", HttpStatus.INTERNAL_SERVER_ERROR);
                 }
             } else {
                 Optional<training> trainingData = trainingRepository.findById(id);
@@ -62,7 +62,7 @@ public class TrainingController {
             return new ResponseEntity<>(_training, HttpStatus.CREATED);
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 
         }
     }
@@ -71,10 +71,10 @@ public class TrainingController {
     public ResponseEntity<HttpStatus> deleteTraining(@PathVariable("id") long id) {
         try {
             trainingRepository.deleteById(id);
-            System.out.print("Training deleted");
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            // System.out.print("Training deleted");
+            return new ResponseEntity("Training deleted",HttpStatus.NO_CONTENT);
         } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);       
         }
     }
     
@@ -84,11 +84,12 @@ public class TrainingController {
             List<training> trainings = trainingRepository.findByName(name);
 
             if (trainings.isEmpty()) {
-                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+                return new ResponseEntity("No training under this name are found. \nPlease try again.", HttpStatus.NOT_FOUND);
             }
             return new ResponseEntity<>(trainings, HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            //return new ResponseEntity(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            throw e;
         }
     }
 
@@ -98,11 +99,11 @@ public class TrainingController {
             List<training> trainings = trainingRepository.findByTopic(topic);
 
             if (trainings.isEmpty()) {
-                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+                return new ResponseEntity("No training under this topic are found.",HttpStatus.NOT_FOUND);
             }
             return new ResponseEntity<>(trainings, HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -112,11 +113,11 @@ public class TrainingController {
             List<training> trainings = trainingRepository.findByEntity(entity);
 
             if (trainings.isEmpty()) {
-                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+                return new ResponseEntity("No training under this entity are found.",HttpStatus.NOT_FOUND);
             }
             return new ResponseEntity<>(trainings, HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -146,7 +147,7 @@ public class TrainingController {
             }
             return new ResponseEntity<>(trainingRepository.save(_training), HttpStatus.OK);
         } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity("There are no trainings with this ID",HttpStatus.NOT_FOUND);
         }
     }
     
