@@ -57,4 +57,58 @@ public class training {
         System.out.println("ID set to: " + this.id);
     }
 
+    public String getName() {
+        return name;
+
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getLink() {
+        return link;
+
+    }
+
+    public void setLink(String link) {
+        this.link = link;
+    }
+
+    public long getDuration() {
+        return duration;
+    }
+
+    public void setDuration(long duration) {
+        this.duration = duration;
+
+    }
+
+    public String getEntity() {
+        return entity;
+
+    }
+
+    public void setEntity(String entity) {
+        this.entity = entity;
+    }
+
+    public String getTopic() {
+        return topic;
+
+    }
+
+    public void setTopic(String topic) {
+        this.topic = topic;
+    }
+
+    public long getAVGRating() {
+        return AVG_Rating;
+    }
+
+    public void setAVGRAting(long AVG_Rating) {
+        this.AVG_Rating = AVG_Rating;
+
+    }
+
 }
