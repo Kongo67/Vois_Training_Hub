@@ -111,4 +111,13 @@ public class training {
 
     }
 
+  
+     
+    
+        @Override
+        public String toString() {
+            return "{\n id =" + getId() + ",\n name =" + name + ",\n link=" + link + ",\n duration=" + duration + ",\n topic=" + topic + ",\n entity=" + entity + ",\n AVG_Rating=" + AVG_Rating + "\n}";
+        }
+    
+
 }

@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.vois.traininghub.Exceptions.NoTrainingFoundException;
 import com.vois.traininghub.Model.training;
 import com.vois.traininghub.Repository.TrainingRepository;
 
@@ -32,7 +34,7 @@ public class TrainingController {
 
     @GetMapping("/training")
     public ResponseEntity<?> getTraining(
-            @RequestParam(value = "id", required = false, defaultValue = "0") long id,
+            @RequestParam(value = "id", required = false) long id,
             @RequestParam(value = "name", required = false) String name,
             @RequestParam(value = "entity", required = false) String entity,
             @RequestParam(value = "topic", required = false) String topic) {
@@ -68,7 +70,8 @@ public class TrainingController {
         }
 
         if (filteredTrainings.isEmpty()) {
-            return new ResponseEntity<>("No trainings found.", HttpStatus.NOT_FOUND);
+            throw new NoTrainingFoundException("No trainings were found with the given parameters. Please check your entries and try again.");
+            //return new ResponseEntity<>("No trainings found.", HttpStatus.NOT_FOUND);
         }
 
         return new ResponseEntity<>(filteredTrainings, HttpStatus.OK);
@@ -84,20 +87,32 @@ public class TrainingController {
                             training.AVG_Rating));
             return new ResponseEntity<>(_training, HttpStatus.CREATED);
         } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return new ResponseEntity(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            throw e;
 
         }
     }
 
-    @DeleteMapping("/training/{id}")
-    public ResponseEntity<HttpStatus> deleteTraining(@PathVariable("id") long id) {
+    @DeleteMapping("/training")
+    public ResponseEntity deleteTraining(@RequestParam(value = "id", required = true) long id) {
         try {
-            trainingRepository.deleteById(id);
-            // System.out.print("Training deleted");
-            return new ResponseEntity("Training deleted", HttpStatus.NO_CONTENT);
+            if (id != 0) {
+                Optional<training> deleteOne = trainingRepository.findById(id);
+                
+                if (deleteOne.isPresent()) {
+                    trainingRepository.deleteById(id);
+                    
+                    return new ResponseEntity<>(deleteOne, HttpStatus.OK);
+                } else {
+                    return new ResponseEntity<>("Training with ID " + id + " not found.", HttpStatus.NOT_FOUND);
+                }
+        }else{
+            
+            throw new Exception("Please enter a valid ID");
+
+            }
         } catch (Exception e) {
-            return new ResponseEntity(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new NoTrainingFoundException(e.getMessage(), e);
+            //return new ResponseEntity(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -178,7 +193,7 @@ public class TrainingController {
             }
             return new ResponseEntity<>(trainingRepository.save(_training), HttpStatus.OK);
         } else {
-            return new ResponseEntity("There are no trainings with this ID", HttpStatus.NOT_FOUND);
+            throw new NoTrainingFoundException("No trainings were found with the given parameters. Please check your entries and try again.");
         }
         //hi0000
     }
