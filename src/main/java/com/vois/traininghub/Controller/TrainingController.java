@@ -12,14 +12,11 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vois.traininghub.Exceptions.NoTrainingFoundException;
 import com.vois.traininghub.Model.training;
 import com.vois.traininghub.Repository.TrainingRepository;
@@ -34,14 +31,14 @@ public class TrainingController {
 
     @GetMapping("/training")
     public ResponseEntity<?> getTraining(
-            @RequestParam(value = "id", required = false) long id,
+            @RequestParam(value = "id", required = false) Long id,
             @RequestParam(value = "name", required = false) String name,
             @RequestParam(value = "entity", required = false) String entity,
             @RequestParam(value = "topic", required = false) String topic) {
 
         List<training> filteredTrainings = new ArrayList<>();
 
-        if (id != 0) {
+        if (id != null) {
             Optional<training> trainingData = trainingRepository.findById(id);
 
             if (trainingData.isPresent()) {
@@ -195,7 +192,6 @@ public class TrainingController {
         } else {
             throw new NoTrainingFoundException("No trainings were found with the given parameters. Please check your entries and try again.");
         }
-        //hi0000
     }
 
-}
+} 

@@ -1,5 +1,7 @@
 package com.vois.traininghub.Model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -7,22 +9,28 @@ import jakarta.persistence.*;
 public class feedback {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "feedback_Id")
     private long feedback_Id;
 
     @Column(name = "review")
-    public String review;
+    @JsonProperty("review")
+    private String review;
 
     @Column(name = "rating")
-    public int rating;
+    @JsonProperty("rating")
+    private int rating;
+
+    @ManyToOne
+    private training FK;
     
     public feedback() {
     }
 
-    public feedback(String review, int rating) {
+    public feedback(String review, int rating, training FK) {
         this.review = review;
         this.rating = rating;
+        this.FK = FK;
     }
 
     public long getFeedback_Id() {
@@ -33,6 +41,30 @@ public class feedback {
         this.feedback_Id = feedback_Id;
         System.out.println("feedback_Id set to " + this.feedback_Id);
 
+    }
+
+    public String getReview() {
+        return review;
+    }
+
+    public void setReview(String review) {
+        this.review = review;
+    }
+
+    public int getRating() {
+        return rating;
+    }
+
+    public void setRating(int rating) {
+        this.rating = rating;
+    }
+
+    public training getFK() {
+        return FK;
+    }
+
+    public void setFK(training fK) {
+        FK = fK;
     }
     
 }
