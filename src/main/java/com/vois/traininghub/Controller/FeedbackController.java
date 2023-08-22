@@ -72,6 +72,15 @@ public class FeedbackController {
                         })
                         .collect(Collectors.toList());
             }
+
+            if(trainingId != null) {
+                filteredFeedback = filteredFeedback.stream()
+                        .filter(feedback -> {
+                            Training feedbackTraining = feedback.getFK();
+                            return feedbackTraining != null && feedbackTraining.getId() == trainingId;
+                        })
+                        .collect(Collectors.toList());
+            }
             
 
             if(filteredFeedback.isEmpty()) {
@@ -82,7 +91,7 @@ public class FeedbackController {
     }
 
 
-    @PostMapping(path = "/feedback", consumes = "application/json")
+    @PostMapping("/feedback")
     public ResponseEntity<Feedback> createFeedback(
        @RequestParam(value = "FK", required= true) Long FK,
        @RequestBody Feedback requestfeedback) {
@@ -90,15 +99,10 @@ public class FeedbackController {
                Training currentTraining = trainingRepository.findById(FK).orElse(null);
                if(currentTraining == null){
                    throw new NoTrainingFoundException("No training found with the given id");
+               }else{
+                    currentTraining.AVG_Rating = (currentTraining.AVG_Rating + requestfeedback.getRating())/2;
+                    trainingRepository.save(currentTraining);
                }
-               System.out.println("review: " + requestfeedback.getReview());
-               System.out.println("rating: " + requestfeedback.getRating());
-               //requestfeedback.setFK(currentTraining);
-
-               //feedback newFeedBack = new feedback();
-               //newFeedBack.setReview(requestfeedback.getReview());
-               //newFeedBack.setRating(requestfeedback.getRating());
-               //newFeedBack.setFK(currentTraining);
                Feedback savedFeedback = feedbackRepository.save(new Feedback(requestfeedback.getReview(), requestfeedback.getRating(), currentTraining));
                if(savedFeedback != null) {
                    return new ResponseEntity<>(savedFeedback, HttpStatus.CREATED);
