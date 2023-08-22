@@ -2,11 +2,11 @@ package com.vois.traininghub.Model;
 
 import jakarta.persistence.*;
 
-//import java.util.List;
+import java.util.List;
 
 @Entity
 @Table(name = "Trainings")
-public class training {
+public class Training {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,14 +31,13 @@ public class training {
     @Column(name = "AVG_Rating")
     public long AVG_Rating;
 
-    // @OneToMany(cascade = CascadeType.ALL)
-    // @JoinColumn(name = "FK_Training_ID", referencedColumnName = "Training_ID")
-    // private List<feedback> Train_ID;
+     @OneToMany(mappedBy = "FK")
+     private List<Feedback> feedbacks;
 
-    public training() {
+    public Training() {
     }
 
-    public training(String name, String link, long duration, String topic, String entity, long AVG_Rating) {
+    public Training(String name, String link, long duration, String topic, String entity, long AVG_Rating) {
 
         this.name = name;
         this.link = link;
@@ -110,5 +109,14 @@ public class training {
         this.AVG_Rating = AVG_Rating;
 
     }
+
+  
+     
+    
+        @Override
+        public String toString() {
+            return "{\n id =" + getId() + ",\n name =" + name + ",\n link=" + link + ",\n duration=" + duration + ",\n topic=" + topic + ",\n entity=" + entity + ",\n AVG_Rating=" + AVG_Rating + "\n}";
+        }
+    
 
 }
