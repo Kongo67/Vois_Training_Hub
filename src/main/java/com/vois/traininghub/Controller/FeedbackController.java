@@ -17,8 +17,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.vois.traininghub.Exceptions.NoTrainingFoundException;
-import com.vois.traininghub.Model.training;
-import com.vois.traininghub.Model.feedback;
+import com.vois.traininghub.Model.Training;
+import com.vois.traininghub.Model.Feedback;
 import com.vois.traininghub.Repository.FeedbackRepository;
 import com.vois.traininghub.Repository.TrainingRepository;
 
@@ -46,10 +46,10 @@ public class FeedbackController {
             @RequestParam(value = "rating", required = false) Integer rating,
             @RequestParam(value = "trainingId", required = false) Long trainingId) {
 
-            List<feedback> filteredFeedback = new ArrayList<>();
+            List<Feedback> filteredFeedback = new ArrayList<>();
 
             if(id != null) {
-                Optional<feedback> feedbackData = feedbackRepository.findById(id);
+                Optional<Feedback> feedbackData = feedbackRepository.findById(id);
 
                 if(feedbackData.isPresent()) {
                     filteredFeedback.add(feedbackData.get());
@@ -82,12 +82,12 @@ public class FeedbackController {
     }
 
 
-    @PostMapping("/feedback")
-    public ResponseEntity<feedback> createFeedback(
+    @PostMapping(path = "/feedback", consumes = "application/json")
+    public ResponseEntity<Feedback> createFeedback(
        @RequestParam(value = "FK", required= true) Long FK,
-       @RequestBody feedback requestfeedback) {
+       @RequestBody Feedback requestfeedback) {
            
-               training currentTraining = trainingRepository.findById(FK).orElse(null);
+               Training currentTraining = trainingRepository.findById(FK).orElse(null);
                if(currentTraining == null){
                    throw new NoTrainingFoundException("No training found with the given id");
                }
@@ -99,7 +99,7 @@ public class FeedbackController {
                //newFeedBack.setReview(requestfeedback.getReview());
                //newFeedBack.setRating(requestfeedback.getRating());
                //newFeedBack.setFK(currentTraining);
-               feedback savedFeedback = feedbackRepository.save(new feedback(requestfeedback.getReview(), requestfeedback.getRating(), currentTraining));
+               Feedback savedFeedback = feedbackRepository.save(new Feedback(requestfeedback.getReview(), requestfeedback.getRating(), currentTraining));
                if(savedFeedback != null) {
                    return new ResponseEntity<>(savedFeedback, HttpStatus.CREATED);
                } else {
@@ -111,7 +111,7 @@ public class FeedbackController {
     public ResponseEntity<?> deleteFeedback(@RequestParam(value = "id", required = true) Long id) {
         try{
         if(id != null) {
-            Optional<feedback> feedbackDeleted = feedbackRepository.findById(id);
+            Optional<Feedback> feedbackDeleted = feedbackRepository.findById(id);
 
             if(feedbackDeleted.isPresent()) {
                 feedbackRepository.deleteById(id);

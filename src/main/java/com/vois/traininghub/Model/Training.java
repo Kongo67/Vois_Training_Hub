@@ -6,7 +6,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "Trainings")
-public class training {
+public class Training {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,12 +32,12 @@ public class training {
     public long AVG_Rating;
 
      @OneToMany(mappedBy = "FK")
-     private List<feedback> feedbacks;
+     private List<Feedback> feedbacks;
 
-    public training() {
+    public Training() {
     }
 
-    public training(String name, String link, long duration, String topic, String entity, long AVG_Rating) {
+    public Training(String name, String link, long duration, String topic, String entity, long AVG_Rating) {
 
         this.name = name;
         this.link = link;

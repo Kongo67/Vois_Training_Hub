@@ -6,7 +6,7 @@ import jakarta.persistence.*;
 
 @Entity
 @Table(name = "Feedback")
-public class feedback {
+public class Feedback {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,12 +22,12 @@ public class feedback {
     private int rating;
 
     @ManyToOne
-    private training FK;
+    private Training FK;
     
-    public feedback() {
+    public Feedback() {
     }
 
-    public feedback(String review, int rating, training FK) {
+    public Feedback(String review, int rating, Training FK) {
         this.review = review;
         this.rating = rating;
         this.FK = FK;
@@ -59,11 +59,11 @@ public class feedback {
         this.rating = rating;
     }
 
-    public training getFK() {
+    public Training getFK() {
         return FK;
     }
 
-    public void setFK(training fK) {
+    public void setFK(Training fK) {
         FK = fK;
     }
     

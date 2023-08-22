@@ -4,16 +4,16 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.vois.traininghub.Model.training;;
+import com.vois.traininghub.Model.Training;;
 
-public interface TrainingRepository extends JpaRepository<training, Long> {
+public interface TrainingRepository extends JpaRepository<Training, Long> {
 
 
-    List<training> findByName(String name);
+    List<Training> findByName(String name);
 
-    List<training> findByTopic(String topic);
+    List<Training> findByTopic(String topic);
 
-    List<training> findByEntity(String entity);
+    List<Training> findByEntity(String entity);
 
     // List<training> FindBylink(String link);
 
