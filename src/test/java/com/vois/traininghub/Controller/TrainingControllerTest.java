@@ -235,6 +235,57 @@ public class TrainingControllerTest {
         assertTrue(responseContent.contains("Please enter a valid ID"));
         verify(trainingRepository, never()).deleteById(anyLong());
     }
+
+    @Test
+    public void updateTrainingTest() throws Exception {
+        Long trainingId = 1L;
+        Training existingTraining = new Training("name", "link", 5, "entity", "topic", 5);
+        existingTraining.setId(trainingId);
+
+        Training updatedTraining = new Training("Updated Name", "updatedLink", 10, "updatedEntity", "updatedTopic", 8);
+        updatedTraining.setId(trainingId); // Set the same ID as the existing training
+
+        when(trainingRepository.findById(trainingId)).thenReturn(Optional.of(existingTraining));
+        when(trainingRepository.save(any(Training.class))).thenReturn(updatedTraining);
+
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.patch("/api/training")
+                .param("id", String.valueOf(trainingId))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"name\":\"Updated Name\", \"link\":\"updatedLink\", \"duration\":10, \"topic\":\"updatedTopic\", \"entity\":\"updatedEntity\", \"AVG_Rating\":8}"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id", Matchers.equalTo(trainingId.intValue()))) // Verify ID remains the same
+                .andExpect(MockMvcResultMatchers.jsonPath("$.name", Matchers.equalTo("Updated Name")))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.link", Matchers.equalTo("updatedLink")))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.duration", Matchers.equalTo(10)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.topic", Matchers.equalTo("updatedEntity")))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.entity", Matchers.equalTo("updatedTopic")))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.AVG_Rating", Matchers.equalTo(8)))
+                .andReturn();
+
+        String responseContent = result.getResponse().getContentAsString();
+        System.out.println("Response Content: " + responseContent);
+
+        verify(trainingRepository).findById(trainingId);
+        verify(trainingRepository).save(any(Training.class));
+    }
+
+    @Test
+    public void updateTrainingNotFoundTest() throws Exception {
+        long trainingId = 1L;
+
+        when(trainingRepository.findById(trainingId)).thenReturn(Optional.empty());
+
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.patch("/api/training")
+                .param("id", String.valueOf(trainingId))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"name\":\"Updated Name\", \"link\":\"updatedLink\", \"duration\":10, \"topic\":\"updatedTopic\", \"entity\":\"updatedEntity\", \"AVG_Rating\":8}"))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andReturn();
+        
+        System.out.println(result.getResponse().getContentAsString());
+        verify(trainingRepository).findById(trainingId);
+        verify(trainingRepository, never()).save(any(Training.class));
+    }
     
 }
       
