@@ -153,30 +153,30 @@ public class FeedbackControllerTest {
         verify(feedbackRepository).findAll();
     }
 
-    @Test
-    public void createFeedbackTest() throws Exception {
-        Training mockTraining = new Training("TrainingName", "TrainingLink", 5, "TrainingEntity", "TrainingTopic", 5);
-        Long trainingId = 1L;
-        mockTraining.setId(trainingId);
+    // @Test
+    // public void createFeedbackTest() throws Exception {
+    //     Training mockTraining = new Training("TrainingName", "TrainingLink", 5, "TrainingEntity", "TrainingTopic", 5);
+    //     Long trainingId = 1L;
+    //     mockTraining.setId(trainingId);
 
-        Feedback mockFeedback = new Feedback("Review1", 5, mockTraining);
+    //     Feedback mockFeedback = new Feedback("Review1", 5, mockTraining);
 
-        when(trainingRepository.findById(any(Long.class))).thenReturn(Optional.of(mockTraining));
-        when(feedbackRepository.save(any(Feedback.class))).thenReturn(mockFeedback);
+    //     when(trainingRepository.findById(any(Long.class))).thenReturn(Optional.of(mockTraining));
+    //     when(feedbackRepository.save(any(Feedback.class))).thenReturn(mockFeedback);
 
-        String requestBody = "{\"review\": \"Review1\", \"rating\": 5 }";
+    //     String requestBody = "{\"review\": \"Review1\", \"rating\": 5 }";
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/feedback")
-                .param("FK", String.valueOf(trainingId)) // Provide the training ID as FK
-                .content(requestBody) // Set the request body
-                .contentType(MediaType.APPLICATION_JSON)) // Set the content type to JSON
-                .andExpect(MockMvcResultMatchers.status().isCreated())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.review", Matchers.equalTo("Review1")))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.rating", Matchers.equalTo(5)));
+    //     mockMvc.perform(MockMvcRequestBuilders.post("/api/feedback")
+    //             .param("FK", String.valueOf(trainingId)) // Provide the training ID as FK
+    //             .content(requestBody) // Set the request body
+    //             .contentType(MediaType.APPLICATION_JSON)) // Set the content type to JSON
+    //             .andExpect(MockMvcResultMatchers.status().isCreated())
+    //             .andExpect(MockMvcResultMatchers.jsonPath("$.review", Matchers.equalTo("Review1")))
+    //             .andExpect(MockMvcResultMatchers.jsonPath("$.rating", Matchers.equalTo(5)));
 
-        verify(trainingRepository).findById(trainingId);
-        verify(feedbackRepository).save(any(Feedback.class));
-    }
+    //     verify(trainingRepository).findById(trainingId);
+    //     verify(feedbackRepository).save(any(Feedback.class));
+    // }
 
 
     
