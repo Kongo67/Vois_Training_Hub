@@ -47,7 +47,7 @@ public class Training {
         this.AVG_Rating = AVG_Rating;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
